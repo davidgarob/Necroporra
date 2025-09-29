@@ -3,21 +3,36 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NECROPORRA 2025</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Necroporra 305 🪦</title>
   <style>
     body {
       font-family: sans-serif;
-      max-width: 800px;
+      max-width: 1200px;
       margin: auto;
       padding: 2rem;
     }
     h1 { text-align: center; }
+    #tabs {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    #tabs button {
+      margin: 0 0.5rem;
+      padding: 0.5rem 1rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #detalle {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
     .jugador {
       border: 1px solid #ccc;
       padding: 1rem;
-      margin: 1rem 0;
       border-radius: 8px;
+      background: #f9f9f9;
     }
     .muerto {
       text-decoration: line-through;
@@ -27,77 +42,113 @@
 </head>
 <body>
   <h1>Necroporra 305 🪦</h1>
+  <div id="tabs">
+    <button onclick="cambiarAño('2024')">2024</button>
+    <button onclick="cambiarAño('2025')">2025</button>
+    <!-- Puedes añadir más botones de años aquí -->
+  </div>
   <div id="ranking"></div>
   <div id="detalle"></div>
+
   <script>
-    const data = {
-      jugadores: [
-        {
-          nombre: "DAVID",
-          selecciones: [
-            { nombre: "José Mujica", edad: 90 },
-            { nombre: "Papa Francisco", edad: 89 },
-            { nombre: "Joaquin Sabina", edad: 76 },
-            { nombre: "Noam Chomsky", edad: 97 },
-            { nombre: "Juan Carlos I", edad: 87 },
-            { nombre: "Buzz Aldrin", edad: 95 },
-            { nombre: "Jack Nicholson", edad: 88 },
-            { nombre: "Dalai Lama XIV", edad: 90 },
-            { nombre: "Judi Dench", edad: 91 },
-            { nombre: "Raphael", edad: 82 }
-          ]
-        },
-        {
-          nombre: "DIEGO",
-          selecciones: [
-            { nombre: "Inah Canabarro Lucas", edad: 117 },
-            { nombre: "Raphael", edad: 82 },
-            { nombre: "Dandy de Barcelona", edad: 53 },
-            { nombre: "Jordi Pujol", edad: 95 },
-            { nombre: "José Mujica", edad: 90 },
-            { nombre: "Lidia Lozano", edad: 65 },
-            { nombre: "Mounir Nasroui", edad: 39 },
-            { nombre: "Manolo el del Bombo", edad: 76 },
-            { nombre: "Joan Pradells", edad: 29 },
-            { nombre: "Jordi Hurtado", edad: 68 }
-          ]
-        },
-        {
-          nombre: "RUBÉN",
-          selecciones: [
-            { nombre: "David Attenborough", edad: 99 },
-            { nombre: "Shigeru Miyamoto", edad: 73 },
-            { nombre: "John Williams", edad: 93 },
-            { nombre: "Raphael", edad: 82 },
-            { nombre: "Clint Eastwood", edad: 95 },
-            { nombre: "Dick Van Dyke", edad: 100 },
-            { nombre: "Akihito", edad: 92 },
-            { nombre: "Dalai Lama XIV", edad: 90 },
-            { nombre: "Khalil al-Hayya", edad: 65 },
-            { nombre: "Dave Kunst", edad: 86 }
-          ]
-        },
-        {
-          nombre: "ALBERTO",
-          selecciones: [
-            { nombre: "Dandy de Barcelona", edad: 53 },
-            { nombre: "Clint Eastwood", edad: 95 },
-            { nombre: "Raphael", edad: 82 },
-            { nombre: "Buzz Aldrin", edad: 95 },
-            { nombre: "Papa Francisco", edad: 89 },
-            { nombre: "Jean-Marie Le Pen", edad: 97 },
-            { nombre: "Joe Biden", edad: 83 },
-            { nombre: "Juan Carlos I", edad: 87 },
-            { nombre: "Julio Igesias", edad: 82 },
-            { nombre: "Alberto Romero", edad: 32 }
-          ]
-        }
-      ],
-      muertos: ["José Mujica", "Papa Francisco", "Inah Canabarro Lucas", "Manolo el del Bombo", "Jean-Marie Le Pen"]
+    const datosPorAño = {
+      "2024": {
+        jugadores: [
+          {
+            nombre: "David",
+            selecciones: [
+              { nombre: "Pelé", edad: 82 },
+              { nombre: "Isabel II", edad: 96 }
+            ]
+          },
+          {
+            nombre: "Marta",
+            selecciones: [
+              { nombre: "Juan Carlos I", edad: 86 },
+              { nombre: "Carmen Sevilla", edad: 92 }
+            ]
+          }
+        ],
+        muertos: ["Pelé", "Isabel II"]
+      },
+      "2025": {
+        jugadores: [
+          {
+            nombre: "David",
+            selecciones: [
+              { nombre: "José Mujica", edad: 90 },
+              { nombre: "Papa Francisco", edad: 89 },
+              { nombre: "Joaquin Sabina", edad: 76 },
+              { nombre: "Noam Chomsky", edad: 97 },
+              { nombre: "Juan Carlos I", edad: 87 },
+              { nombre: "Buzz Aldrin", edad: 95 },
+              { nombre: "Jack Nicholson", edad: 88 },
+              { nombre: "Dalai Lama XIV", edad: 90 },
+              { nombre: "Judi Dench", edad: 91 },
+              { nombre: "Raphael", edad: 82 }
+            ]
+          },
+          {
+            nombre: "DIEGO",
+            selecciones: [
+              { nombre: "Inah Canabarro Lucas", edad: 117 },
+              { nombre: "Raphael", edad: 82 },
+              { nombre: "Dandy de Barcelona", edad: 53 },
+              { nombre: "Jordi Pujol", edad: 95 },
+              { nombre: "José Mujica", edad: 90 },
+              { nombre: "Lidia Lozano", edad: 65 },
+              { nombre: "Mounir Nasroui", edad: 39 },
+              { nombre: "Manolo el del Bombo", edad: 76 },
+              { nombre: "Joan Pradells", edad: 29 },
+              { nombre: "Jordi Hurtado", edad: 68 }
+            ]
+          },
+          {
+            nombre: "RUBÉN",
+            selecciones: [
+              { nombre: "David Attenborough", edad: 99 },
+              { nombre: "Shigeru Miyamoto", edad: 73 },
+              { nombre: "John Williams", edad: 93 },
+              { nombre: "Raphael", edad: 82 },
+              { nombre: "Clint Eastwood", edad: 95 },
+              { nombre: "Dick Van Dyke", edad: 100 },
+              { nombre: "Akihito", edad: 92 },
+              { nombre: "Dalai Lama XIV", edad: 90 },
+              { nombre: "Khalil al-Hayya", edad: 65 },
+              { nombre: "Dave Kunst", edad: 86 }
+            ]
+          },
+          {
+            nombre: "Alberto",
+            selecciones: [
+              { nombre: "Dandy de Barcelona", edad: 53 },
+              { nombre: "Clint Eastwood", edad: 95 },
+              { nombre: "Raphael", edad: 82 },
+              { nombre: "Buzz Aldrin", edad: 95 },
+              { nombre: "Papa Francisco", edad: 89 },
+              { nombre: "Jean-Marie Le Pen", edad: 97 },
+              { nombre: "Joe Biden", edad: 83 },
+              { nombre: "Juan Carlos I", edad: 87 },
+              { nombre: "Julio Igesias", edad: 82 },
+              { nombre: "Alberto Romero", edad: 32 }
+            ]
+          }
+        ],
+        muertos: []
+      }
     };
+
+    let añoSeleccionado = "2025";
+    let data = datosPorAño[añoSeleccionado];
 
     function calcularPuntos(jugador, muertos) {
       return jugador.selecciones.filter(sel => muertos.includes(sel.nombre)).length;
+    }
+
+    function cambiarAño(anio) {
+      añoSeleccionado = anio;
+      data = datosPorAño[anio];
+      render();
     }
 
     function render() {
@@ -110,14 +161,14 @@
       })).sort((a, b) => b.puntos - a.puntos);
 
       rankingDiv.innerHTML = `
-        <h2>Ranking</h2>
+        <h2>Ranking ${añoSeleccionado}</h2>
         <ol>
           ${resultados.map(r => `<li><strong>${r.nombre}</strong>: ${r.puntos} punto${r.puntos !== 1 ? 's' : ''}</li>`).join("")}
         </ol>
       `;
 
       detalleDiv.innerHTML = `
-        <h2>Selecciones por jugador</h2>
+        <h2>Selecciones ${añoSeleccionado}</h2>
         ${data.jugadores.map(j => `
           <div class="jugador">
             <h3>${j.nombre}</h3>
