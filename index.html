@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Necroporra 305</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 800px;
+      margin: auto;
+      padding: 2rem;
+    }
+    h1 { text-align: center; }
+    .jugador {
+      border: 1px solid #ccc;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 8px;
+    }
+    .muerto {
+      text-decoration: line-through;
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h1>Necroporra 305 🪦</h1>
+  <div id="ranking"></div>
+  <div id="detalle"></div>
+  <script>
+    const data = {
+      jugadores: [
+        {
+          nombre: "David",
+          selecciones: [
+            { nombre: "José Mujica", edad: 90 },
+            { nombre: "Papa Francisco", edad: 89 },
+            { nombre: "Joaquin Sabina", edad: 76 },
+            { nombre: "Noam Chomsky", edad: 97 },
+            { nombre: "Juan Carlos I", edad: 87 },
+            { nombre: "Buzz Aldrin", edad: 95 },
+            { nombre: "Jack Nicholson", edad: 88 },
+            { nombre: "Dalai Lama XIV", edad: 90 },
+            { nombre: "Judi Dench", edad: 91 },
+            { nombre: "Raphael", edad: 82 }
+          ]
+        },
+        {
+          nombre: "DIEGO",
+          selecciones: [
+            { nombre: "Inah Canabarro Lucas", edad: 117 },
+            { nombre: "Raphael", edad: 82 },
+            { nombre: "Dandy de Barcelona", edad: 53 },
+            { nombre: "Jordi Pujol", edad: 95 },
+            { nombre: "José Mujica", edad: 90 },
+            { nombre: "Lidia Lozano", edad: 65 },
+            { nombre: "Mounir Nasroui", edad: 39 },
+            { nombre: "Manolo el del Bombo", edad: 76 },
+            { nombre: "Joan Pradells", edad: 29 },
+            { nombre: "Jordi Hurtado", edad: 68 }
+          ]
+        },
+        {
+          nombre: "RUBÉN",
+          selecciones: [
+            { nombre: "David Attenborough", edad: 99 },
+            { nombre: "Shigeru Miyamoto", edad: 73 },
+            { nombre: "John Williams", edad: 93 },
+            { nombre: "Raphael", edad: 82 },
+            { nombre: "Clint Eastwood", edad: 95 },
+            { nombre: "Dick Van Dyke", edad: 100 },
+            { nombre: "Akihito", edad: 92 },
+            { nombre: "Dalai Lama XIV", edad: 90 },
+            { nombre: "Khalil al-Hayya", edad: 65 },
+            { nombre: "Dave Kunst", edad: 86 }
+          ]
+        },
+        {
+          nombre: "Alberto",
+          selecciones: [
+            { nombre: "Dandy de Barcelona", edad: 53 },
+            { nombre: "Clint Eastwood", edad: 95 },
+            { nombre: "Raphael", edad: 82 },
+            { nombre: "Buzz Aldrin", edad: 95 },
+            { nombre: "Papa Francisco", edad: 89 },
+            { nombre: "Jean-Marie Le Pen", edad: 97 },
+            { nombre: "Joe Biden", edad: 83 },
+            { nombre: "Juan Carlos I", edad: 87 },
+            { nombre: "Julio Igesias", edad: 82 },
+            { nombre: "Alberto Romero", edad: 32 }
+          ]
+        }
+      ],
+      muertos: []
+    };
+
+    function calcularPuntos(jugador, muertos) {
+      return jugador.selecciones.filter(sel => muertos.includes(sel.nombre)).length;
+    }
+
+    function render() {
+      const rankingDiv = document.getElementById("ranking");
+      const detalleDiv = document.getElementById("detalle");
+
+      const resultados = data.jugadores.map(j => ({
+        nombre: j.nombre,
+        puntos: calcularPuntos(j, data.muertos)
+      })).sort((a, b) => b.puntos - a.puntos);
+
+      rankingDiv.innerHTML = `
+        <h2>Ranking</h2>
+        <ol>
+          ${resultados.map(r => `<li><strong>${r.nombre}</strong>: ${r.puntos} punto${r.puntos !== 1 ? 's' : ''}</li>`).join("")}
+        </ol>
+      `;
+
+      detalleDiv.innerHTML = `
+        <h2>Selecciones por jugador</h2>
+        ${data.jugadores.map(j => `
+          <div class="jugador">
+            <h3>${j.nombre}</h3>
+            <ul>
+              ${j.selecciones.map(s => `
+                <li class="${data.muertos.includes(s.nombre) ? 'muerto' : ''}">
+                  ${s.nombre} (${s.edad} años)
+                </li>
+              `).join("")}
+            </ul>
+          </div>
+        `).join("")}
+      `;
+    }
+
+    render();
+  </script>
+</body>
+</html>
