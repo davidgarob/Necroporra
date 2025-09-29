@@ -24,7 +24,7 @@
     }
     #detalle {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(4, 1fr);
       gap: 1rem;
       margin-top: 2rem;
     }
@@ -43,9 +43,9 @@
 <body>
   <h1>NECROPORRA 🪦</h1>
   <div id="tabs">
-    <button onclick="cambiarAño('2025')">2021</button>
-    <button onclick="cambiarAño('2025')">2022</button>
-    <button onclick="cambiarAño('2025')">2023</button>
+    <button onclick="cambiarAño('2021')">2021</button>
+    <button onclick="cambiarAño('2022')">2022</button>
+    <button onclick="cambiarAño('2023')">2023</button>
     <button onclick="cambiarAño('2024')">2024</button>
     <button onclick="cambiarAño('2025')">2025</button>
     <!-- Puedes añadir más botones de años aquí -->
@@ -105,16 +105,16 @@
           {
             nombre: "ALBERTO",
             selecciones: [
-              { nombre: "-", edad: - },
-              { nombre: "-", edad: - },
-              { nombre: "-", edad: - },
-              { nombre: "-", edad: - },
-              { nombre: "-", edad: - },
-              { nombre: "-", edad: - },
-              { nombre: "-", edad: - },
-              { nombre: "-", edad: - },
-              { nombre: "-", edad: - },
-              { nombre: "-", edad: - }
+              { nombre: "-", edad: "-" },
+              { nombre: "-", edad: "-" },
+              { nombre: "-", edad: "-" },
+              { nombre: "-", edad: "-" },
+              { nombre: "-", edad: "-" },
+              { nombre: "-", edad: "-" },
+              { nombre: "-", edad: "-" },
+              { nombre: "-", edad: "-" },
+              { nombre: "-", edad: "-" },
+              { nombre: "-", edad: "-" }
             ]
           }
         ],
@@ -258,8 +258,8 @@
             nombre: "DAVID",
             selecciones: [
               { nombre: "Beckembauer", edad: 79 },
-              { nombre: "Clint Eastwool", edad: 95 },
-              { nombre: "Julio Igesias", edad: 82 },
+              { nombre: "Clint Eastwood", edad: 95 },
+              { nombre: "Julio Iglesias", edad: 82 },
               { nombre: "Yoko Ono", edad: 92 },
               { nombre: "Jimmy Carter", edad: 100 },
               { nombre: "Tamames", edad: 92 },
@@ -375,7 +375,7 @@
               { nombre: "Jean-Marie Le Pen", edad: 97 },
               { nombre: "Joe Biden", edad: 83 },
               { nombre: "Juan Carlos I", edad: 87 },
-              { nombre: "Julio Igesias", edad: 82 },
+              { nombre: "Julio Iglesias", edad: 82 },
               { nombre: "Alberto Romero", edad: 32 }
             ]
           }
