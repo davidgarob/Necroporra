@@ -1,58 +1,78 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NECROPORRA 🪦</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      max-width: 1200px;
-      margin: auto;
-      padding: 2rem;
-    }
-    h1 { text-align: center; }
-    #tabs {
-      text-align: center;
-      margin-bottom: 2rem;
-    }
-    #tabs button {
-      margin: 0 0.5rem;
-      padding: 0.5rem 1rem;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    #detalle {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    .jugador {
-      border: 1px solid #ccc;
-      padding: 1rem;
-      border-radius: 8px;
-      background: #f9f9f9;
-    }
-    .muerto {
-      text-decoration: line-through;
-      color: red;
-    }
-  </style>
+}
+#ganador {
+text-align: center;
+font-size: 1.5rem;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+#detalle {
+display: grid;
+grid-template-columns: repeat(4, 1fr);
+gap: 1rem;
+margin-top: 3rem;
+}
+.jugador {
+border: 1px solid #ccc;
+padding: 1rem;
+border-radius: 8px;
+background: #f9f9f9;
+}
+.muerto {
+text-decoration: line-through;
+color: red;
+}
+.titulo-seccion {
+font-weight: bold;
+text-align: center;
+margin-bottom: 1rem;
+text-transform: uppercase;
+}
+table {
+width: 100%;
+border-collapse: collapse;
+}
+th, td {
+padding: 0.5rem;
+border: 1px solid #ccc;
+text-align: center;
+}
+</style>
 </head>
 <body>
-  <h1>NECROPORRA 🪦</h1>
-  <div id="tabs">
-    <button onclick="cambiarAño('2021')">2021</button>
-    <button onclick="cambiarAño('2022')">2022</button>
-    <button onclick="cambiarAño('2023')">2023</button>
-    <button onclick="cambiarAño('2024')">2024</button>
-    <button onclick="cambiarAño('2025')">2025</button>
-    <!-- Puedes añadir más botones de años aquí -->
-  </div>
-  <div id="ranking"></div>
-  <div id="detalle"></div>
+<h1>NECROPORRA 🪦</h1>
+<div id="tabs">
+<button onclick="cambiarAño('2021')">2021</button>
+<button onclick="cambiarAño('2022')">2022</button>
+<button onclick="cambiarAño('2023')">2023</button>
+<button onclick="cambiarAño('2024')">2024</button>
+<button onclick="cambiarAño('2025')">2025</button>
+</div>
 
+
+<div id="main-layout">
+<div id="estadisticas">
+<div class="titulo-seccion">Estadísticas</div>
+<div id="tabla-estadisticas"></div>
+</div>
+<div id="ganador">
+<div>
+<div class="titulo-seccion">Ganador del año</div>
+<div id="nombre-ganador"></div>
+</div>
+</div>
+<div id="ranking">
+<div class="titulo-seccion">Ranking</div>
+<div id="tabla-ranking"></div>
+</div>
+</div>
+
+
+<div id="detalle"></div>
+
+
+<script>
   <script>
     const datosPorAño = {
       "2021": {
@@ -388,49 +408,87 @@
     let data = datosPorAño[añoSeleccionado];
 
     function calcularPuntos(jugador, muertos) {
-      return jugador.selecciones.filter(sel => muertos.includes(sel.nombre)).length;
-    }
+return (suma / selecciones.length).toFixed(1);
+}
 
-    function cambiarAño(anio) {
-      añoSeleccionado = anio;
-      data = datosPorAño[anio];
-      render();
-    }
 
-    function render() {
-      const rankingDiv = document.getElementById("ranking");
-      const detalleDiv = document.getElementById("detalle");
+function calcularEdadMediaAciertos(selecciones, muertos) {
+const aciertos = selecciones.filter(sel => muertos.includes(sel.nombre));
+if (aciertos.length === 0) return '-';
+const suma = aciertos.reduce((acc, sel) => acc + sel.edad, 0);
+return (suma / aciertos.length).toFixed(1);
+}
 
-      const resultados = data.jugadores.map(j => ({
-        nombre: j.nombre,
-        puntos: calcularPuntos(j, data.muertos)
-      })).sort((a, b) => b.puntos - a.puntos);
 
-      rankingDiv.innerHTML = `
-        <h2>Ranking ${añoSeleccionado}</h2>
-        <ol>
-          ${resultados.map(r => `<li><strong>${r.nombre}</strong>: ${r.puntos} punto${r.puntos !== 1 ? 's' : ''}</li>`).join("")}
-        </ol>
-      `;
+function cambiarAño(anio) {
+añoSeleccionado = anio;
+data = datosPorAño[anio];
+render();
+}
 
-      detalleDiv.innerHTML = `
-        <h2>Selecciones ${añoSeleccionado}</h2>
-        ${data.jugadores.map(j => `
-          <div class="jugador">
-            <h3>${j.nombre}</h3>
-            <ul>
-              ${j.selecciones.map(s => `
-                <li class="${data.muertos.includes(s.nombre) ? 'muerto' : ''}">
-                  ${s.nombre} (${s.edad} años)
-                </li>
-              `).join("")}
-            </ul>
-          </div>
-        `).join("")}
-      `;
-    }
 
-    render();
-  </script>
+function render() {
+const detalleDiv = document.getElementById("detalle");
+const tablaRanking = document.getElementById("tabla-ranking");
+const tablaEstadisticas = document.getElementById("tabla-estadisticas");
+const nombreGanador = document.getElementById("nombre-ganador");
+
+
+// Ranking
+const resultados = data.jugadores.map(j => ({
+nombre: j.nombre,
+puntos: calcularPuntos(j, data.muertos)
+})).sort((a, b) => b.puntos - a.puntos);
+
+
+tablaRanking.innerHTML = `
+<ol>
+${resultados.map(r => `<li><strong>${r.nombre}</strong>: ${r.puntos} punto${r.puntos !== 1 ? 's' : ''}</li>`).join("")}
+</ol>
+`;
+
+
+// Ganador/es
+const maxPuntos = resultados[0]?.puntos || 0;
+const ganadores = resultados.filter(r => r.puntos === maxPuntos && maxPuntos > 0);
+nombreGanador.innerHTML = ganadores.length
+? ganadores.map(g => `🏆 ${g.nombre}`).join("<br>")
+: '—';
+
+
+// Estadísticas
+const cabecera = `<tr><th>Jugador</th><th>Edad Media</th><th>Aciertos</th><th>Edad Media Aciertos</th></tr>`;
+const filas = data.jugadores.map(j => {
+const puntos = calcularPuntos(j, data.muertos);
+return `<tr>
+<td>${j.nombre}</td>
+<td>${calcularEdadMedia(j.selecciones)}</td>
+<td>${puntos}</td>
+<td>${calcularEdadMediaAciertos(j.selecciones, data.muertos)}</td>
+</tr>`;
+}).join("");
+tablaEstadisticas.innerHTML = `<table>${cabecera}${filas}</table>`;
+
+
+// Detalle por jugador (como antes)
+detalleDiv.innerHTML = `
+${data.jugadores.map(j => `
+<div class="jugador">
+<h3>${j.nombre}</h3>
+<ul>
+${j.selecciones.map(s => `
+<li class="${data.muertos.includes(s.nombre) ? 'muerto' : ''}">
+${s.nombre} (${s.edad} años)
+</li>
+`).join("")}
+</ul>
+</div>
+`).join("")}
+`;
+}
+
+
+render();
+</script>
 </body>
 </html>
