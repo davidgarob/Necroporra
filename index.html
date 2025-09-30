@@ -80,6 +80,7 @@
     <button onclick="cambiarAño('2023')">2023</button>
     <button onclick="cambiarAño('2024')">2024</button>
     <button onclick="cambiarAño('2025')">2025</button>
+    <button onclick="mostrarEstadisticas()">🏅 Estadísticas</button>
   </div>
 
   <div id="main-layout">
@@ -502,5 +503,78 @@
 
     render();
   </script>
+  <!-- CONTENEDOR DE NECROPORRA -->
+<div id="contenedor-necroporra">
+  <div id="main-layout">
+    <div id="estadisticas">
+      <div class="titulo-seccion">Estadísticas</div>
+      <div id="tabla-estadisticas"></div>
+    </div>
+    <div id="ganador">
+      <div>
+        <div class="titulo-seccion">Ganador del año</div>
+        <div id="nombre-ganador"></div>
+      </div>
+    </div>
+    <div id="ranking">
+      <div class="titulo-seccion">Ranking</div>
+      <div id="tabla-ranking"></div>
+    </div>
+  </div>
+
+  <div id="detalle"></div>
+</div>
+
+<!-- SECCIÓN DE ESTADÍSTICAS GLOBALES -->
+<div id="seccion-estadisticas-globales" style="display: none;">
+  <div class="titulo-seccion">🏅 Estadísticas globales</div>
+  <div id="tabla-estadisticas-globales"></div>
+  <p id="los-cinco-grandes"></p>
+</div>
+
+<script>
+  function cambiarAño(anio) {
+    añoSeleccionado = anio;
+    data = datosPorAño[anio];
+    document.getElementById("contenedor-necroporra").style.display = "block";
+    document.getElementById("seccion-estadisticas-globales").style.display = "none";
+    render();
+  }
+
+  function mostrarEstadisticas() {
+    document.getElementById("contenedor-necroporra").style.display = "none";
+    document.getElementById("seccion-estadisticas-globales").style.display = "block";
+
+    const tabla = document.getElementById("tabla-estadisticas-globales");
+    tabla.innerHTML = `
+      <table>
+        <tr><th></th><th>DAVID</th><th>DIEGO</th><th>RUBÉN</th><th>ALBERTO</th></tr>
+        <tr><td>Promedio edad</td><td>81,2</td><td>73,4</td><td>73,4</td><td>81,4</td></tr>
+        <tr><td>Victorias</td><td>1</td><td>4</td><td>2</td><td>1</td></tr>
+        <tr><td>Aciertos totales</td><td>7</td><td>11</td><td>5</td><td>7</td></tr>
+        <tr><td>Racha</td><td>0</td><td>4 (1 tras copa)</td><td>1</td><td>0</td></tr>
+        <tr><td>% Personas muertas</td><td>29,3%</td><td>35,0%</td><td>15,8%</td><td>24,1%</td></tr>
+        <tr><td>Prom. edad más bajo</td><td>69,1 (2022)</td><td>71,4 (2023,2025)</td><td>62,3 (2021)</td><td>78,4 (2024)</td></tr>
+        <tr><td>Prom. edad más alto</td><td>88,5 (2025)</td><td>80,8 (2022)</td><td>87,5 (2025)</td><td>88,9 (2022)</td></tr>
+        <tr><td>Año con más aciertos</td><td>2 (2022,2024,2025)</td><td>3 (2024,2025)</td><td>3 (2024)</td><td>2 (2022,2024,2025)</td></tr>
+        <tr><td>Cucharas de madera</td><td>1 (2021)</td><td>0</td><td>1 (2022)</td><td>0</td></tr>
+        <tr><td>Persona más repetida</td><td>Yoko Ono (3)</td><td>Joaquín Sabina (3)</td><td>Akihito (4)</td><td>Clint Eastwood (4)</td></tr>
+        <tr><td>Acierto más joven</td><td>Beckenbauer (79)</td><td>Enrique San Francisco (66)</td><td>Omar Álvarez (33)</td><td>Yahya al Sinwar (62)</td></tr>
+        <tr><td>Acierto más mayor</td><td>Jimmy Carter (100)</td><td>Kane Tanaka (119)</td><td>Bud Anderson (102)</td><td>Jimmy Carter (100)</td></tr>
+        <tr><td>% ≤ 50 años</td><td>4,9%</td><td>22,5%</td><td>15,8%</td><td>10,3%</td></tr>
+        <tr><td>% 50–75 años</td><td>22,0%</td><td>25,0%</td><td>39,5%</td><td>20,7%</td></tr>
+        <tr><td>% 75–100 años</td><td>70,7%</td><td>42,5%</td><td>36,8%</td><td>62,1%</td></tr>
+        <tr><td>% > 100 años</td><td>2,4%</td><td>10,0%</td><td>7,9%</td><td>6,9%</td></tr>
+      </table>
+    `;
+
+    document.getElementById("los-cinco-grandes").innerText =
+      "👑 Los 5 grandes (puestos por todos en algún momento): Clint Eastwood · Jimmy Carter · Juan Carlos I · Papa Francisco · Raphael";
+  }
+
+  // Render inicial
+  render();
+</script>
+
 </body>
 </html>
