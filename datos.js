@@ -186,6 +186,10 @@ const PORRAS = {
   },
   2024: {
     cerrado: true,
+    curiosidades: [
+    "Año con más puntos de la historia: 10.",
+    "Jimmy Carter estaba en 4 de las 4 porras y se llevó los puntos de todos.",
+  ],
     muertos: ["beckenbauer", "jimmy_carter", "silvia_pinal", "maggie_smith", "bud_anderson", "sinwar"],
     jugadores: {
       "DAVID":   ["beckenbauer", "clint_eastwood", "julio_iglesias", "yoko_ono", "jimmy_carter", "tamames", "chuck_norris", "paco_sanz", "dandy_barcelona", "michael_caine"],
