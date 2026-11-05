@@ -104,6 +104,15 @@
       #detalle { grid-template-columns: 1fr; }
       #seccion-global { overflow-x: auto; }
     }
+    #curiosidades {
+  margin-top: 2rem;
+  padding: 1rem 1rem 1rem 2.5rem;
+  background: #f3f3f3;
+  border-radius: 8px;
+}
+#curiosidades:empty { display: none; }
+#curiosidades li { margin: 0.4rem 0; }
+    
   </style>
 </head>
 <body>
@@ -130,8 +139,8 @@
         <div id="tabla-ranking"></div>
       </div>
     </div>
-    <ul id="curiosidades"></ul>
     <div id="detalle"></div>
+    <ul id="curiosidades"></ul>
   </div>
 
   <!-- VISTA GLOBAL -->
