@@ -17,17 +17,25 @@
       margin-bottom: 2rem;
     }
     #tabs button {
-      margin: 0 0.5rem;
+      margin: 0.25rem 0.5rem;
       padding: 0.5rem 1rem;
       font-weight: bold;
       cursor: pointer;
+      border: 1px solid #bbb;
+      border-radius: 6px;
+      background: #fff;
+    }
+    #tabs button.activo {
+      background: #333;
+      color: #fff;
+      border-color: #333;
     }
     #main-layout {
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
       gap: 2rem;
     }
-    #estadisticas, #ranking, #ganador {
+    #estadisticas, #ranking, #ganador, #seccion-global {
       background: #f3f3f3;
       padding: 1rem;
       border-radius: 8px;
@@ -38,6 +46,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    #estado-año {
+      font-size: 0.9rem;
+      color: #666;
+      margin-top: 0.75rem;
     }
     #detalle {
       display: grid;
@@ -64,592 +77,202 @@
     table {
       width: 100%;
       border-collapse: collapse;
+      background: #fff;
     }
     th, td {
       padding: 0.5rem;
       border: 1px solid #ccc;
       text-align: center;
     }
+    td:first-child { text-align: left; font-weight: bold; }
+    #nota-global {
+      margin-top: 1rem;
+      font-size: 0.9rem;
+      color: #555;
+    }
+    #aviso-datos {
+      background: #fff3cd;
+      border: 1px solid #e0c36a;
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: none;
+    }
 
     @media (max-width: 768px) {
-      #main-layout {
-        grid-template-columns: 1fr;
-      }
-    #detalle {
-      grid-template-columns: 1fr;
-      }
+      #main-layout { grid-template-columns: 1fr; }
+      #detalle { grid-template-columns: 1fr; }
+      #seccion-global { overflow-x: auto; }
     }
   </style>
 </head>
 <body>
   <h1>NECROPORRA 🪦</h1>
-  <div id="tabs">
-    <button onclick="cambiarAño('2021')">2021</button>
-    <button onclick="cambiarAño('2022')">2022</button>
-    <button onclick="cambiarAño('2023')">2023</button>
-    <button onclick="cambiarAño('2024')">2024</button>
-    <button onclick="cambiarAño('2025')">2025</button>
-    <button onclick="cambiarAño('2026')">2026</button>
-    <button onclick="mostrarEstadisticas()">🏅 Estadísticas</button>
-  </div>
+  <div id="aviso-datos"></div>
+  <div id="tabs"></div>
 
-  <div id="main-layout">
-    <div id="estadisticas">
-      <div class="titulo-seccion">Estadísticas</div>
-      <div id="tabla-estadisticas"></div>
-    </div>
-    <div id="ganador">
-      <div>
-        <div class="titulo-seccion">Ganador del año</div>
-        <div id="nombre-ganador"></div>
+  <!-- VISTA POR AÑO -->
+  <div id="vista-año">
+    <div id="main-layout">
+      <div id="estadisticas">
+        <div class="titulo-seccion">Estadísticas</div>
+        <div id="tabla-estadisticas"></div>
+      </div>
+      <div id="ganador">
+        <div>
+          <div class="titulo-seccion">Ganador del año</div>
+          <div id="nombre-ganador"></div>
+          <div id="estado-año"></div>
+        </div>
+      </div>
+      <div id="ranking">
+        <div class="titulo-seccion">Ranking</div>
+        <div id="tabla-ranking"></div>
       </div>
     </div>
-    <div id="ranking">
-      <div class="titulo-seccion">Ranking</div>
-      <div id="tabla-ranking"></div>
+    <div id="detalle"></div>
+  </div>
+
+  <!-- VISTA GLOBAL -->
+  <div id="vista-global" style="display: none;">
+    <div id="seccion-global">
+      <div class="titulo-seccion">🏅 Estadísticas globales</div>
+      <div id="tabla-global"></div>
+      <p id="los-cinco-grandes"></p>
+      <p id="mas-elegidos"></p>
+      <p id="nota-global"></p>
     </div>
   </div>
 
-  <div id="detalle"></div>
+  <script src="datos.js"></script>
+  <script src="stats.js"></script>
+  <script>
+    let añoSeleccionado = AÑOS[AÑOS.length - 1];
 
+    // ---------- Formato ----------
+    const num = (n, d = 1) => n === null || n === undefined ? "-" : n.toFixed(d).replace(".", ",");
+    const pct = n => num(n, 1) + "%";
+    const nombre = id => famoso(id).nombre;
+    const plural = (n, s, p) => `${n} ${n === 1 ? s : p}`;
 
-<script>
-    const datosPorAño = {
-      "2021": {
-        jugadores: [
-          {
-            nombre: "DAVID",
-            selecciones: [
-              { nombre: "Buzz Aldrin", edad: 95 },
-              { nombre: "Juan Carlos I", edad: 87 },
-              { nombre: "Isabel II", edad: 96 },
-              { nombre: "Pelé", edad: 82 },
-              { nombre: "Val Kilmer", edad: 66 },
-              { nombre: "Willie Nelson", edad: 92 },
-              { nombre: "Francis Ford Coppola", edad: 86 },
-              { nombre: "Carmen Sevilla", edad: 93 },
-              { nombre: "Berlusconi", edad: 87 },
-              { nombre: "Jaime de Marichalar", edad: 62 }
-            ]
-          },
-          {
-            nombre: "DIEGO",
-            selecciones: [
-              { nombre: "Kane Tanaka", edad: 119 },
-              { nombre: "Juan Carlos I", edad: 87 },
-              { nombre: "Enrique San Francisco", edad: 66 },
-              { nombre: "Michael Schumacher", edad: 56 },
-              { nombre: "Sofía de Grecia", edad: 87 },
-              { nombre: "Araceli Hidalgo", edad: 101 },
-              { nombre: "Miguel Bosé", edad: 69 },
-              { nombre: "Isabel II", edad: 96 },
-              { nombre: "Jordi ENP", edad: 31 },
-              { nombre: "Chispas", edad: 3 }
-            ]
-          },
-          {
-            nombre: "RUBÉN",
-            selecciones: [
-              { nombre: "Shigeru Miyamoto", edad: 73 },
-              { nombre: "Juan Carlos I", edad: 87 },
-              { nombre: "Charlie Sheen", edad: 60 },
-              { nombre: "Billie Eilish", edad: 24 },
-              { nombre: "Xi Jinping", edad: 72 },
-              { nombre: "Snoop Dogg", edad: 54 },
-              { nombre: "Robert DeNiro", edad: 82 },
-              { nombre: "Arnold Schwarzenegger", edad: 78 },
-              { nombre: "Juan Muñoz", edad: 60 },
-              { nombre: "Omar Álvarez", edad: 33 }
-            ]
-          },
-        ],
-        muertos: ["Enrique San Francisco", "Omar Álvarez"]
-      },
-      
-      "2022": {
-        jugadores: [
-          {
-            nombre: "DAVID",
-            selecciones: [
-              { nombre: "Ghislaine Maxwell", edad: 64 },
-              { nombre: "Yoko Ono", edad: 92 },
-              { nombre: "Demi Lovato", edad: 33 },
-              { nombre: "Pelé", edad: 82 },
-              { nombre: "Carmen Sevilla", edad: 93 },
-              { nombre: "Sixtynine", edad: 29 },
-              { nombre: "Isabel II", edad: 96 },
-              { nombre: "Joe Exotic", edad: 62 },
-              { nombre: "Gary Busey", edad: 81 },
-              { nombre: "Leticia Sabater", edad: 59 }
-            ]
-          },
-          {
-            nombre: "DIEGO",
-            selecciones: [
-              { nombre: "Kane Tanaka", edad: 119 },
-              { nombre: "Joaquin Sabina", edad: 76 },
-              { nombre: "Pelé", edad: 82 },
-              { nombre: "Ignatius", edad: 52 },
-              { nombre: "Clint Eastwood", edad: 95 },
-              { nombre: "Papa Francisco", edad: 89 },
-              { nombre: "Mick Jagger", edad: 82 },
-              { nombre: "Ana Rosa Quintana", edad: 69 },
-              { nombre: "Manolo el del Bombo", edad: 76 },
-              { nombre: "Jordi Hurtado", edad: 68 }
-            ]
-          },
-          {
-            nombre: "RUBÉN",
-            selecciones: [
-              { nombre: "Juan Carlos I", edad: 87 },
-              { nombre: "Orslok", edad: 30 },
-              { nombre: "Robert A Kottick", edad: 62 },
-              { nombre: "Pratibha Devisingh Patil", edad: 91 },
-              { nombre: "Dalai Lama XIV", edad: 90 },
-              { nombre: "Baron Divavesi Waqa", edad: 66 },
-              { nombre: "Dairo Antonio Úsuga David", edad: 54 },
-              { nombre: "Akihito", edad: 92 },
-              { nombre: "Sisiku Julius Ayuk Tabe", edad: 60 },
-              { nombre: "Francisco Camps", edad: 63 }
-            ]
-          },
-          {
-            nombre: "ALBERTO",
-            selecciones: [
-              { nombre: "Isabel II", edad: 96 },
-              { nombre: "Clint Eastwood", edad: 95 },
-              { nombre: "Benedicto XVI", edad: 95 },
-              { nombre: "Ana Rosa Quintana", edad: 69 },
-              { nombre: "Antonio Resines", edad: 71 },
-              { nombre: "Yoko Ono", edad: 92 },
-              { nombre: "Dick van Dyke", edad: 100 },
-              { nombre: "Jimmy Carter", edad: 100 },
-              { nombre: "Amancio Ortega", edad: 89 },
-              { nombre: "Joan Manuel Serrat", edad: 82 }
-            ]
-          }
-        ],
-        muertos: ["Pelé", "Isabel II", "Kane Tanaka","Benedicto XVI"]
-      },
-       "2023": {
-        jugadores: [
-          {
-            nombre: "DAVID",
-            selecciones: [
-              { nombre: "Adolfo Hitler", edad: 59 },
-              { nombre: "Jimmy Carter", edad: 100 },
-              { nombre: "Esperanza Aguirre", edad: 73 },
-              { nombre: "Julian Muñoz", edad: 77 },
-              { nombre: "Arévalo", edad: 77 },
-              { nombre: "Willie Nelson", edad: 92 },
-              { nombre: "Yoko Ono", edad: 92 },
-              { nombre: "Gerard Depardieu", edad: 77 },
-              { nombre: "Joe Biden", edad: 83 },
-              { nombre: "Concha Velasco", edad: 84 }
-            ]
-          },
-          {
-            nombre: "DIEGO",
-            selecciones: [
-              { nombre: "Jimmy Carter", edad: 100 },
-              { nombre: "Concha Velasco", edad: 84 },
-              { nombre: "Zelenski", edad: 47 },
-              { nombre: "Papa Giorgio", edad: 71 },
-              { nombre: "Joaquin Sabina", edad: 76 },
-              { nombre: "Jordi Pujol", edad: 95 },
-              { nombre: "Zazza el Italiano", edad: 33 },
-              { nombre: "María Teresa Campos", edad: 82 },
-              { nombre: "Juan Carlos I", edad: 87 },
-              { nombre: "Andrew Tate", edad: 39 }
-            ]
-          },
-          {
-            nombre: "RUBÉN",
-            selecciones: [
-              { nombre: "Clint Eastwood", edad: 95 },
-              { nombre: "Juan Carlos I", edad: 87 },
-              { nombre: "The Black Alien Project", edad: 36 },
-              { nombre: "Michael Schumacher", edad: 56 },
-              { nombre: "Carmen Sevilla", edad: 93 },
-              { nombre: "José Luis Gil", edad: 68 },
-              { nombre: "Dalai Lama XIV", edad: 90 },
-              { nombre: "Akihito", edad: 92 },
-              { nombre: "Jimmy Carter", edad: 100 },
-              { nombre: "Lil Uzi Vert", edad: 30 }
-            ]
-          },
-          {
-            nombre: "ALBERTO",
-            selecciones: [
-              { nombre: "Jimmy Carter", edad: 100 },
-              { nombre: "Clint Eastwood", edad: 95 },
-              { nombre: "Juan Carlos I", edad: 87 },
-              { nombre: "Ana Rosa Quintana", edad: 69 },
-              { nombre: "Felipe González", edad: 83 },
-              { nombre: "Miguel Ángel Revilla", edad: 82 },
-              { nombre: "Amaia Montero", edad: 49 },
-              { nombre: "Concha Velasco", edad: 84 },
-              { nombre: "Eduardo Zaplana", edad: 69 },
-              { nombre: "Ramón el Vanidoso", edad: 69 }
-            ]
-          }
-        ],
-        muertos: ["Concha Velasco", "María Teresa Campos", "Carmen Sevilla"]
-      },
-      
-      "2024": {
-        jugadores: [
-          {
-            nombre: "DAVID",
-            selecciones: [
-              { nombre: "Beckembauer", edad: 79 },
-              { nombre: "Clint Eastwood", edad: 95 },
-              { nombre: "Julio Iglesias", edad: 82 },
-              { nombre: "Yoko Ono", edad: 92 },
-              { nombre: "Jimmy Carter", edad: 100 },
-              { nombre: "Tamames", edad: 92 },
-              { nombre: "Chuck Norris", edad: 85 },
-              { nombre: "Paco Sánz", edad: 55 },
-              { nombre: "Dandy de Barcelona", edad: 53 },
-              { nombre: "Michael Caine", edad: 92 }
-            ]
-          },
-          {
-            nombre: "DIEGO",
-            selecciones: [
-              { nombre: "Dandy de Barcelona", edad: 53 },
-              { nombre: "Joaquin Sabina", edad: 76 },
-              { nombre: "Lucas", edad: 43 },
-              { nombre: "Beckembauer", edad: 79 },
-              { nombre: "Silvia Pinal", edad: 93 },
-              { nombre: "Jimmy Carter", edad: 100 },
-              { nombre: "Raúl Castro", edad: 94 },
-              { nombre: "Clint Eastwood", edad: 95 },
-              { nombre: "Dragisa Gudelj", edad: 28 },
-              { nombre: "Unzué", edad: 58 }
-            ]
-          },
-          {
-            nombre: "RUBÉN",
-            selecciones: [
-              { nombre: "Akihito", edad: 92 },
-              { nombre: "Bruce Willis", edad: 70 },
-              { nombre: "Maggie Smith", edad: 90 },
-              { nombre: "Joan Pradells", edad: 29 },
-              { nombre: "Baron Divavesi Waqa", edad: 66 },
-              { nombre: "Mijail Jodorkovsky", edad: 64 },
-              { nombre: "Bud Anderson", edad: 102 },
-              { nombre: "Orslok", edad: 30 },
-              { nombre: "Papa Francisco", edad: 89 },
-              { nombre: "Jimmy Carter", edad: 100 }
-            ]
-          },
-          {
-            nombre: "ALBERTO",
-            selecciones: [
-              { nombre: "Dandy de Barcelona", edad: 53 },
-              { nombre: "Jordi Pujol", edad: 95 },
-              { nombre: "Clint Eastwood", edad: 95 },
-              { nombre: "Zazza el Italiano", edad: 33 },
-              { nombre: "Jimmy Carter", edad: 100 },
-              { nombre: "Juan Carlos I", edad: 87 },
-              { nombre: "Morgan Freeman", edad: 88 },
-              { nombre: "Raphael", edad: 82 },
-              { nombre: "Papa Francisco", edad: 89 },
-              { nombre: "Yahya al Sinwar", edad: 62 }
-            ]
-          }
-        ],
-        muertos: ["Beckembauer", "Jimmy Carter", "Silvia Pinal", "Maggie Smith", "Bud Anderson", "Yahya al Sinwar"]
-      },
-      "2025": {
-        jugadores: [
-          {
-            nombre: "DAVID",
-            selecciones: [
-              { nombre: "José Mujica", edad: 90 },
-              { nombre: "Papa Francisco", edad: 89 },
-              { nombre: "Joaquin Sabina", edad: 76 },
-              { nombre: "Noam Chomsky", edad: 97 },
-              { nombre: "Juan Carlos I", edad: 87 },
-              { nombre: "Buzz Aldrin", edad: 95 },
-              { nombre: "Jack Nicholson", edad: 88 },
-              { nombre: "Dalai Lama XIV", edad: 90 },
-              { nombre: "Judi Dench", edad: 91 },
-              { nombre: "Raphael", edad: 82 }
-            ]
-          },
-          {
-            nombre: "DIEGO",
-            selecciones: [
-              { nombre: "Inah Canabarro Lucas", edad: 117 },
-              { nombre: "Raphael", edad: 82 },
-              { nombre: "Dandy de Barcelona", edad: 53 },
-              { nombre: "Jordi Pujol", edad: 95 },
-              { nombre: "José Mujica", edad: 90 },
-              { nombre: "Lidia Lozano", edad: 65 },
-              { nombre: "Mounir Nasroui", edad: 39 },
-              { nombre: "Manolo el del Bombo", edad: 76 },
-              { nombre: "Joan Pradells", edad: 29 },
-              { nombre: "Jordi Hurtado", edad: 68 }
-            ]
-          },
-          {
-            nombre: "RUBÉN",
-            selecciones: [
-              { nombre: "David Attenborough", edad: 99 },
-              { nombre: "Shigeru Miyamoto", edad: 73 },
-              { nombre: "John Williams", edad: 93 },
-              { nombre: "Raphael", edad: 82 },
-              { nombre: "Clint Eastwood", edad: 95 },
-              { nombre: "Dick Van Dyke", edad: 100 },
-              { nombre: "Akihito", edad: 92 },
-              { nombre: "Dalai Lama XIV", edad: 90 },
-              { nombre: "Khalil al-Hayya", edad: 65 },
-              { nombre: "Dave Kunst", edad: 86 }
-            ]
-          },
-          {
-            nombre: "ALBERTO",
-            selecciones: [
-              { nombre: "Dandy de Barcelona", edad: 53 },
-              { nombre: "Clint Eastwood", edad: 95 },
-              { nombre: "Raphael", edad: 82 },
-              { nombre: "Buzz Aldrin", edad: 95 },
-              { nombre: "Papa Francisco", edad: 89 },
-              { nombre: "Jean-Marie Le Pen", edad: 97 },
-              { nombre: "Joe Biden", edad: 83 },
-              { nombre: "Juan Carlos I", edad: 87 },
-              { nombre: "Julio Iglesias", edad: 82 },
-              { nombre: "Alberto Romero", edad: 32 }
-            ]
-          }
-        ],
-        muertos: ["José Mujica", "Papa Francisco","Inah Canabarro Lucas", "Manolo el del Bombo", "Jean-Marie Le Pen"]
-      },
-        "2026": {
-        jugadores: [
-          {
-            nombre: "DAVID",
-            selecciones: [
-              { nombre: "Sam Neill", edad: 78 },
-              { nombre: "Robert Duvall", edad: 94 },
-              { nombre: "Clint Eastwood", edad: 95 },
-              { nombre: "Dick Van dyke", edad: 100 },
-              { nombre: "Cañita Brava", edad: 80 },
-              { nombre: "Buzz Aldrin", edad: 95 },
-              { nombre: "George Soros", edad: 95 },
-              { nombre: "Simon Pérez", edad: 40 },
-              { nombre: "Yoko Ono", edad: 92 },
-              { nombre: "Marie-Rose Tessier", edad: 115 }
-            ]
-          },
-          {
-            nombre: "DIEGO",
-            selecciones: [
-              { nombre: "Sabina", edad: 76 },
-              { nombre: "Simón Pérez", edad: 40 },
-              { nombre: "Dandy de Barcelona", edad: 54 },
-              { nombre: "Eduardo Casanova", edad: 34 },
-              { nombre: "Michael J Fox", edad: 64 },
-              { nombre: "El Puma", edad: 82 },
-              { nombre: "Bruce Willis", edad: 70 },
-              { nombre: "Unzué", edad: 58 },
-              { nombre: "Flossie", edad: 30 },
-              { nombre: "Jordi Hurtado", edad: 68 }
-            ]
-          },
-          {
-            nombre: "RUBÉN",
-            selecciones: [
-              { nombre: "Simon Pérez", edad: 40 },
-              { nombre: "Antonio Tejero", edad: 93 },
-              { nombre: "Juan Tamariz", edad: 83 },
-              { nombre: "Yayoi Kusama", edad: 96 },
-              { nombre: "Javier Cansado", edad: 70 },
-              { nombre: "Yoko Ono", edad: 92 },
-              { nombre: "Ruy de Carvalho", edad: 98 },
-              { nombre: "Dick Van Dyke", edad: 100 },
-              { nombre: "Jose Luis Gil", edad: 68 },
-              { nombre: "Rowan Atkinson", edad: 70 }
-            ]
-          },
-          {
-            nombre: "ALBERTO",
-            selecciones: [
-              { nombre: "Dick Van Dyke", edad: 100 },
-              { nombre: "Clint Eastwood", edad: 95 },
-              { nombre: "Jordi Pujol", edad: 95 },
-              { nombre: "Buzz Aldrin", edad: 95 },
-              { nombre: "Jordi Sabaté i Pons", edad: 41 },
-              { nombre: "Julio Iglesias", edad: 82 },
-              { nombre: "Joe Biden", edad: 83 },
-              { nombre: "Juan Carlos I", edad: 87 },
-              { nombre: "Willie Nelson", edad: 92 },
-              { nombre: "Ian McKellen", edad: 86 }
-            ]
-          }
-        ],
-        muertos: ["Sam Neill","Robert Duvall","Marie-Rose Tessier","Antonio Tejero","Yayoi Kusama","Juan Tamariz"]
-      }
-    };
-   let añoSeleccionado = "2026";
-    let data = datosPorAño[añoSeleccionado];
-
-    function calcularPuntos(jugador, muertos) {
-      return jugador.selecciones.filter(sel => muertos.includes(sel.nombre)).length;
+    // ---------- Pestañas ----------
+    function pintarTabs(activa) {
+      const tabs = document.getElementById("tabs");
+      tabs.innerHTML = AÑOS.map(a =>
+        `<button class="${activa === a ? "activo" : ""}" onclick="cambiarAño(${a})">${a}</button>`
+      ).join("") +
+        `<button class="${activa === "global" ? "activo" : ""}" onclick="mostrarEstadisticas()">🏅 Estadísticas</button>`;
     }
 
-    function calcularEdadMedia(selecciones) {
-      const validos = selecciones.filter(s => typeof s.edad === 'number' && s.edad > 0);
-      if (validos.length === 0) return '-';
-      const suma = validos.reduce((acc, sel) => acc + sel.edad, 0);
-      return (suma / validos.length).toFixed(1);
+    function cambiarAño(año) {
+      añoSeleccionado = año;
+      document.getElementById("vista-año").style.display = "block";
+      document.getElementById("vista-global").style.display = "none";
+      pintarTabs(año);
+      renderAño();
     }
 
-    function calcularEdadMediaAciertos(selecciones, muertos) {
-      const aciertos = selecciones.filter(sel => muertos.includes(sel.nombre));
-      if (aciertos.length === 0) return '-';
-      const suma = aciertos.reduce((acc, sel) => acc + sel.edad, 0);
-      return (suma / aciertos.length).toFixed(1);
+    function mostrarEstadisticas() {
+      document.getElementById("vista-año").style.display = "none";
+      document.getElementById("vista-global").style.display = "block";
+      pintarTabs("global");
+      renderGlobal();
     }
 
-    function cambiarAño(anio) {
-      añoSeleccionado = anio;
-      data = datosPorAño[anio];
-      render();
-    }
+    // ---------- Vista por año ----------
+    function renderAño() {
+      const año = añoSeleccionado;
+      const porra = PORRAS[año];
+      const ranking = rankingDe(año);
 
-    function render() {
-      const detalleDiv = document.getElementById("detalle");
-      const tablaRanking = document.getElementById("tabla-ranking");
-      const tablaEstadisticas = document.getElementById("tabla-estadisticas");
-      const nombreGanador = document.getElementById("nombre-ganador");
-
-      // Ranking
-      const resultados = data.jugadores.map(j => ({
-        nombre: j.nombre,
-        puntos: calcularPuntos(j, data.muertos)
-      })).sort((a, b) => b.puntos - a.puntos);
-
-      tablaRanking.innerHTML = `
+      document.getElementById("tabla-ranking").innerHTML = `
         <ol>
-          ${resultados.map(r => `<li><strong>${r.nombre}</strong>: ${r.puntos} punto${r.puntos !== 1 ? 's' : ''}</li>`).join("")}
-        </ol>
-      `;
+          ${ranking.map(r => `<li><strong>${r.nombre}</strong>: ${plural(r.puntos, "punto", "puntos")}</li>`).join("")}
+        </ol>`;
 
-      // Ganador/es
-      const maxPuntos = resultados[0]?.puntos || 0;
-      const ganadores = resultados.filter(r => r.puntos === maxPuntos && maxPuntos > 0);
-      nombreGanador.innerHTML = ganadores.length
-        ? ganadores.map(g => `🏆 ${g.nombre}`).join("<br>")
-        : '—';
+      const ganadores = ganadoresDe(año);
+      document.getElementById("nombre-ganador").innerHTML =
+        ganadores.length ? ganadores.map(g => `🏆 ${g}`).join("<br>") : "—";
+      document.getElementById("estado-año").textContent =
+        porra.cerrado ? "" : (ganadores.length ? "Provisional: el año sigue en juego" : "El año sigue en juego");
 
-      // Estadísticas
-      const cabecera = `<tr><th>Jugador</th><th>Edad Media</th><th>Aciertos</th><th>Edad Media Aciertos</th></tr>`;
-      const filas = data.jugadores.map(j => {
-        const puntos = calcularPuntos(j, data.muertos);
+      const cabecera = `<tr><th>Jugador</th><th>Edad media</th><th>Aciertos</th><th>Edad media aciertos</th></tr>`;
+      const filas = jugadoresDe(año).map(j => {
+        const ids = seleccionesDe(año, j);
+        const hits = aciertosDe(año, j);
         return `<tr>
-          <td>${j.nombre}</td>
-          <td>${calcularEdadMedia(j.selecciones)}</td>
-          <td>${puntos}</td>
-          <td>${calcularEdadMediaAciertos(j.selecciones, data.muertos)}</td>
+          <td>${j}</td>
+          <td>${num(media(ids.map(id => edadEn(id, año))))}</td>
+          <td>${hits.length}</td>
+          <td>${num(media(hits.map(id => edadEn(id, año))))}</td>
         </tr>`;
       }).join("");
-      tablaEstadisticas.innerHTML = `<table>${cabecera}${filas}</table>`;
+      document.getElementById("tabla-estadisticas").innerHTML = `<table>${cabecera}${filas}</table>`;
 
-      // Detalle por jugador
-      detalleDiv.innerHTML = `
-        ${data.jugadores.map(j => `
-          <div class="jugador">
-            <h3>${j.nombre}</h3>
-            <ul>
-              ${j.selecciones.map(s => `
-                <li class="${data.muertos.includes(s.nombre) ? 'muerto' : ''}">
-                  ${s.nombre} (${s.edad} años)
-                </li>
-              `).join("")}
-            </ul>
-          </div>
-        `).join("")}
-      `;
+      document.getElementById("detalle").innerHTML = jugadoresDe(año).map(j => `
+        <div class="jugador">
+          <h3>${j}</h3>
+          <ul>
+            ${seleccionesDe(año, j).map(id => `
+              <li class="${porra.muertos.includes(id) ? "muerto" : ""}">
+                ${nombre(id)} (${edadEn(id, año)} años)
+              </li>`).join("")}
+          </ul>
+        </div>`).join("");
     }
 
-    render();
+    // ---------- Vista global ----------
+    function renderGlobal() {
+      const st = estadisticasGlobales();
+      const fila = (etiqueta, fn) =>
+        `<tr><td>${etiqueta}</td>${st.map(s => `<td>${fn(s)}</td>`).join("")}</tr>`;
+
+      const lista = ids => ids.map(nombre).join(", ");
+      const conAños = a => a.años.join(", ");
+      const aciertosEmpatados = arr =>
+        arr.map(x => `${nombre(x.id)}`).join(" / ") + ` (${arr[0].edad})`;
+
+      document.getElementById("tabla-global").innerHTML = `
+        <table>
+          <tr><th></th>${st.map(s => `<th>${s.jugador}</th>`).join("")}</tr>
+          ${fila("Promedio edad", s => num(s.edadMedia))}
+          ${fila("Victorias", s => s.victorias)}
+          ${fila("Aciertos totales", s => s.aciertos)}
+          ${fila("Mejor racha de victorias", s => s.mejorRacha)}
+          ${fila("% de aciertos (sobre selecciones)", s => pct(s.pctAciertos))}
+          ${fila("Prom. edad más bajo", s => `${num(s.mediaMasBaja.media)} (${s.mediaMasBaja.año})`)}
+          ${fila("Prom. edad más alto", s => `${num(s.mediaMasAlta.media)} (${s.mediaMasAlta.año})`)}
+          ${fila("Año con más aciertos", s => `${s.mejorAño.n} (${conAños(s.mejorAño)})`)}
+          ${fila("Cucharas de madera", s => s.cucharas)}
+          ${fila("Persona más repetida", s => `${lista(s.masRepetido.ids)} (${s.masRepetido.veces})`)}
+          ${fila("Acierto más joven", s => s.aciertoJoven ? aciertosEmpatados(s.aciertoJoven) : "-")}
+          ${fila("Acierto más mayor", s => s.aciertoMayor ? aciertosEmpatados(s.aciertoMayor) : "-")}
+          ${TRAMOS.map(t => fila(`% ${t} años`, s => pct(s.pctTramos[t]))).join("")}
+        </table>`;
+
+      document.getElementById("los-cinco-grandes").textContent =
+        `👑 Los grandes (elegidos por todos en algún momento): ${lista(losGrandes()).replaceAll(", ", " · ")}`;
+
+      const top = masElegidos();
+      document.getElementById("mas-elegidos").textContent =
+        `📌 Más veces elegido: ${lista(top.ids).replaceAll(", ", " · ")} · ${top.veces} veces`;
+
+      const abiertos = AÑOS.filter(a => !PORRAS[a].cerrado);
+      document.getElementById("nota-global").textContent =
+        "Edades calculadas con la edad que tenía cada famoso en el año de la porra. " +
+        (abiertos.length
+          ? `Victorias, rachas y cucharas solo cuentan años cerrados (${abiertos.join(", ")} sigue en juego); aciertos y porcentajes sí incluyen ese año.`
+          : "");
+    }
+
+    // ---------- Arranque ----------
+    const avisos = validarDatos();
+    if (avisos.length) {
+      const caja = document.getElementById("aviso-datos");
+      caja.style.display = "block";
+      caja.innerHTML = "<strong>Revisar datos:</strong><br>" + avisos.join("<br>");
+    }
+    cambiarAño(añoSeleccionado);
   </script>
-  <!-- CONTENEDOR DE NECROPORRA -->
-
-<div id="contenedor-necroporra">
-  <div id="main-layout">
-    <div id="estadisticas">
-      <div class="titulo-seccion">Estadísticas</div>
-      <div id="tabla-estadisticas"></div>
-    </div>
-    <div id="ganador">
-      <div>
-        <div class="titulo-seccion">Ganador del año</div>
-        <div id="nombre-ganador"></div>
-      </div>
-    </div>
-    <div id="ranking">
-      <div class="titulo-seccion">Ranking</div>
-      <div id="tabla-ranking"></div>
-    </div>
-  </div>
-
-  <div id="detalle"></div>
-</div>
-<!-- SECCIÓN DE ESTADÍSTICAS GLOBALES -->
-<div id="seccion-estadisticas-globales" style="display: none;">
-  <div class="titulo-seccion">🏅 Estadísticas globales</div>
-  <div id="tabla-estadisticas-globales"></div>
-  <p id="los-cinco-grandes"></p>
-</div>
-
-<script>
-  function cambiarAño(anio) {
-    añoSeleccionado = anio;
-    data = datosPorAño[anio];
-    document.getElementById("contenedor-necroporra").style.display = "block";
-    document.getElementById("seccion-estadisticas-globales").style.display = "none";
-    render();
-  }
-
-  function mostrarEstadisticas() {
-    document.getElementById("contenedor-necroporra").style.display = "none";
-    document.getElementById("seccion-estadisticas-globales").style.display = "block";
-
-    const tabla = document.getElementById("tabla-estadisticas-globales");
-    tabla.innerHTML = `
-      <table>
-        <tr><th></th><th>DAVID</th><th>DIEGO</th><th>RUBÉN</th><th>ALBERTO</th></tr>
-        <tr><td>Promedio edad</td><td>81,4</td><td>73,8</td><td>74</td><td>81,9</td></tr>
-        <tr><td>Victorias</td><td>1</td><td>5</td><td>2</td><td>1</td></tr>
-        <tr><td>Aciertos totales</td><td>10</td><td>11</td><td>8</td><td>7</td></tr>
-        <tr><td>Racha</td><td>0</td><td>5 (2 tras copa)</td><td>1</td><td>0</td></tr>
-        <tr><td>% Personas muertas</td><td>31,3%</td><td>32,6%</td><td>19,6%</td><td>21,9%</td></tr>
-        <tr><td>Prom. edad más bajo</td><td>69,1 (2022)</td><td>57,6 (2026)</td><td>62,3 (2021)</td><td>78,4 (2024)</td></tr>
-        <tr><td>Prom. edad más alto</td><td>88,5 (2025)</td><td>80,8 (2022)</td><td>87,5 (2025)</td><td>88,9 (2022)</td></tr>
-        <tr><td>Año con más aciertos</td><td>3 (2026)</td><td>3 (2024,2025)</td><td>3 (2024,2026)</td><td>2 (2022,2024,2025)</td></tr>
-        <tr><td>Cucharas de madera</td><td>1 (2021)</td><td>0</td><td>1 (2022)</td><td>0</td></tr>
-        <tr><td>Persona más repetida</td><td>Yoko Ono (4)</td><td>Joaquín Sabina (4)</td><td>Akihito (4)</td><td>Clint Eastwood (5)</td></tr>
-        <tr><td>Acierto más joven</td><td>Sam Neill (78)</td><td>Enrique San Francisco (66)</td><td>Omar Álvarez (33)</td><td>Yahya al Sinwar (62)</td></tr>
-        <tr><td>Acierto más mayor</td><td>Marie-Rose Tessier (115)</td><td>Kane Tanaka (119)</td><td>Bud Anderson (102)</td><td>Jimmy Carter (100)</td></tr>
-        <tr><td>% ≤ 50 años</td><td>5%</td><td>20%</td><td>13,3%</td><td>8%</td></tr>
-        <tr><td>% 50–75 años</td><td>15%</td><td>28,3%</td><td>33,3%</td><td>16%</td></tr>
-        <tr><td>% 75–100 años</td><td>75%</td><td>41,7%</td><td>44,3%</td><td>66%</td></tr>
-        <tr><td>% > 100 años</td><td>5%</td><td>10%</td><td>10%</td><td>10%</td></tr>
-      </table>
-    `;
-
-    document.getElementById("los-cinco-grandes").innerText =
-      "👑 Los 5 grandes (puestos por todos en algún momento): Clint Eastwood · Jimmy Carter · Juan Carlos I · Papa Francisco · Raphael";
-      "👑 MÁS VECES ELEGIDO : Clint Eastwood · Juan Carlos I · 11 Veces";
-  }
-
-  // Render inicial
-  render();
-</script>
-
 </body>
 </html>
