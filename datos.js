@@ -157,6 +157,13 @@ const FAMOSOS = {
 const PORRAS = {
   2021: {
     cerrado: true,
+    curiosidades: [
+    "Acierto más joven de la historia.",
+    "Los dos promedios de acierto más bajos de la historia.",
+    "Primera cuchara de madera de la historia (David).",
+    "Primer año sin la participación de los 4.",
+    "Año con menos aciertos (2).",
+  ],
     muertos: ["enrique_san_francisco", "omar_alvarez"],
     jugadores: {
       "DAVID": ["buzz_aldrin", "juan_carlos_i", "isabel_ii", "pele", "val_kilmer", "willie_nelson", "coppola", "carmen_sevilla", "berlusconi", "marichalar"],
@@ -166,6 +173,10 @@ const PORRAS = {
   },
   2022: {
     cerrado: true,
+    curiosidades: [
+    "Acierto más mayor de la historia (Kane Tanaka)(Diego).",
+    "Edad media de aciertos más altas de la historia (100,5)(Diego)",
+  ],
     muertos: ["pele", "isabel_ii", "kane_tanaka", "benedicto_xvi"],
     jugadores: {
       "DAVID":   ["maxwell", "yoko_ono", "demi_lovato", "pele", "carmen_sevilla", "sixtynine", "isabel_ii", "joe_exotic", "gary_busey", "leticia_sabater"],
@@ -176,6 +187,10 @@ const PORRAS = {
   },
   2023: {
     cerrado: true,
+    curiosidades: [
+    "Año con más puntos de la historia: 10.",
+    "Jimmy Carter estaba en 4 de las 4 porras y se llevó los puntos de todos.",
+  ],
     muertos: ["concha_velasco", "maria_teresa_campos", "carmen_sevilla"],
     jugadores: {
       "DAVID":   ["hitler", "jimmy_carter", "aguirre", "julian_munoz", "arevalo", "willie_nelson", "yoko_ono", "depardieu", "biden", "concha_velasco"],
@@ -200,6 +215,10 @@ const PORRAS = {
   },
   2025: {
     cerrado: true,
+    curiosidades: [
+    "Año con más puntos de la historia: 10.",
+    "Jimmy Carter estaba en 4 de las 4 porras y se llevó los puntos de todos.",
+  ],
     muertos: ["mujica", "papa_francisco", "inah_canabarro", "manolo_bombo", "le_pen"],
     jugadores: {
       "DAVID":   ["mujica", "papa_francisco", "sabina", "chomsky", "juan_carlos_i", "buzz_aldrin", "jack_nicholson", "dalai_lama", "judi_dench", "raphael"],
