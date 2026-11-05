@@ -74,7 +74,7 @@ const FAMOSOS = {
   serrat:                 { nombre: "Joan Manuel Serrat", nac: 1943 },
 
   // ---- 2023 ----
-  hitler:                 { nombre: "Adolf Hitler", nac: 1965 }, // con "fallecio" la edad se congela en esa fecha
+  hitler:                 { nombre: "Hitler", nac: 1965 }, // con "fallecio" la edad se congela en esa fecha
   aguirre:                { nombre: "Esperanza Aguirre", nac: 1952 },
   julian_munoz:           { nombre: "Julián Muñoz", nac: 1947,},
   arevalo:                { nombre: "Arévalo", nac: 1947, },
@@ -191,7 +191,7 @@ const PORRAS = {
   2023: {
     cerrado: true,
     curiosidades: [
-    "Unico año con aciertos unicamente femeninos.",
+    "Único año con aciertos únicamente femeninos.",
     "Primer año con únicamente un ganador (Diego).",
     "Tercera victoria de Diego y por lo tanto entrega de copa.",
     "Primer año en el que puntuaron todos.",
@@ -225,7 +225,7 @@ const PORRAS = {
   2025: {
     cerrado: true,
     curiosidades: [
-    "Primera vez que se acepta la inscripción de un candidadato despues de la fecha (Inah Canabarro Lucas) (Diego).",
+    "Primera vez que se acepta la inscripción de un candidato después de la fecha (Inah Canabarro Lucas) (Diego).",
     "Quinta victoria de Diego, record actual.",
     "Acierto más tempranero (Alberto) (Le Pen, 7 de enero).",
     "Primera persona en ponerse a sí mismo (Alberto)",
