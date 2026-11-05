@@ -158,11 +158,12 @@ const PORRAS = {
   2021: {
     cerrado: true,
     curiosidades: [
-    "Acierto más joven de la historia.",
+    "Acierto más joven de la historia (Omar Álvarez,34 años) (Rubén).",
     "Los dos promedios de acierto más bajos de la historia.",
     "Primera cuchara de madera de la historia (David).",
     "Primer año sin la participación de los 4.",
     "Año con menos aciertos (2).",
+    "Primera elección no humana (Chispas) (Diego)",
   ],
     muertos: ["enrique_san_francisco", "omar_alvarez"],
     jugadores: {
@@ -176,6 +177,8 @@ const PORRAS = {
     curiosidades: [
     "Acierto más mayor de la historia (Kane Tanaka)(Diego).",
     "Edad media de aciertos más altas de la historia (100,5)(Diego)",
+    "Record de aciertos de Alberto (2).",
+    "Acierto más tardío (Alberto) (Benedicto XVI, 31 de Diciembre).",
   ],
     muertos: ["pele", "isabel_ii", "kane_tanaka", "benedicto_xvi"],
     jugadores: {
@@ -188,8 +191,10 @@ const PORRAS = {
   2023: {
     cerrado: true,
     curiosidades: [
-    "Año con más puntos de la historia: 10.",
-    "Jimmy Carter estaba en 4 de las 4 porras y se llevó los puntos de todos.",
+    "Unico año con aciertos unicamente femeninos.",
+    "Primer año con únicamente un ganador (Diego).",
+    "Tercera victoria de Diego y por lo tanto entrega de copa.",
+    "Primer año en el que puntuaron todos.",
   ],
     muertos: ["concha_velasco", "maria_teresa_campos", "carmen_sevilla"],
     jugadores: {
@@ -203,7 +208,11 @@ const PORRAS = {
     cerrado: true,
     curiosidades: [
     "Año con más puntos de la historia: 10.",
-    "Jimmy Carter estaba en 4 de las 4 porras y se llevó los puntos de todos.",
+    "Primer año en el que los cuatro aciertan a la misma persona (Jimmy Carter).",
+    "Record de más personas únicas acertadas (6).",
+    "Record de aciertos de Diego (3).",
+    "Record de aciertos de Rubén (3).",
+    "Acierto más tempranero (Diego y David) (Beckenbauer, 7 de enero).",
   ],
     muertos: ["beckenbauer", "jimmy_carter", "silvia_pinal", "maggie_smith", "bud_anderson", "sinwar"],
     jugadores: {
@@ -216,8 +225,10 @@ const PORRAS = {
   2025: {
     cerrado: true,
     curiosidades: [
-    "Año con más puntos de la historia: 10.",
-    "Jimmy Carter estaba en 4 de las 4 porras y se llevó los puntos de todos.",
+    "Primera vez que se acepta la inscripción de un candidadato despues de la fecha (Inah Canabarro Lucas) (Diego).",
+    "Quinta victoria de Diego, record actual.",
+    "Acierto más tempranero (Alberto) (Le Pen, 7 de enero).",
+    "Primera persona en ponerse a sí mismo (Alberto)",
   ],
     muertos: ["mujica", "papa_francisco", "inah_canabarro", "manolo_bombo", "le_pen"],
     jugadores: {
@@ -229,6 +240,12 @@ const PORRAS = {
   },
   2026: {
     cerrado: false, // poner true cuando acabe el año
+    curiosidades: [
+    "Record de más personas únicas acertadas (6).",
+    "Record de aciertos de David (3).",
+    "Más tiempo entre victorias (David, 4 años).",
+    "Record de persona más repetida (Eastwood, 5 veces).",
+  ],
     muertos: ["sam_neill", "robert_duvall", "marie_rose_tessier", "antonio_tejero", "yayoi_kusama", "juan_tamariz"],
     jugadores: {
       "DAVID":   ["sam_neill", "robert_duvall", "clint_eastwood", "dick_van_dyke", "canita_brava", "buzz_aldrin", "george_soros", "simon_perez", "yoko_ono", "marie_rose_tessier"],
