@@ -130,6 +130,7 @@
         <div id="tabla-ranking"></div>
       </div>
     </div>
+    <ul id="curiosidades"></ul>
     <div id="detalle"></div>
   </div>
 
@@ -219,6 +220,9 @@
               </li>`).join("")}
           </ul>
         </div>`).join("");
+      const cur = porra.curiosidades || [];
+  document.getElementById("curiosidades").innerHTML =
+    cur.map(t => `<li>${t}</li>`).join("");
     }
 
     // ---------- Vista global ----------
