@@ -164,6 +164,7 @@ const PORRAS = {
     "Primer año sin la participación de los 4.",
     "Año con menos aciertos (2).",
     "Primera elección no humana (Chispas) (Diego)",
+    "Superviviente de mayor edad de la historia (Kane Tanaka, 118) (Diego)",
   ],
     muertos: ["enrique_san_francisco", "omar_alvarez"],
     jugadores: {
@@ -244,7 +245,9 @@ const PORRAS = {
     "Record de más personas únicas acertadas (6).",
     "Record de aciertos de David (3).",
     "Más tiempo entre victorias (David, 4 años).",
-    "Record de persona más repetida (Eastwood, 5 veces).",
+    "Record de persona más repetida por una persona (Alberto, Clint Eastwood, 5 veces).",
+    "Edad media de necroporra más baja de la historia (Diego, 59,2).",
+    "Edad media de necroporra más alta de la historia (David, 89,2).",
   ],
     muertos: ["sam_neill", "robert_duvall", "marie_rose_tessier", "antonio_tejero", "yayoi_kusama", "juan_tamariz"],
     jugadores: {
