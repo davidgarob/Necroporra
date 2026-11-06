@@ -231,6 +231,7 @@ const PORRAS = {
     "Quinta victoria de Diego, record actual.",
     "Acierto más tempranero (Alberto) (Le Pen, 7 de enero).",
     "Primera persona en ponerse a sí mismo (Alberto)",
+    "Año con menos elecciones nuevas (13)",
   ],
     muertos: ["mujica", "papa_francisco", "inah_canabarro", "manolo_bombo", "le_pen"],
     jugadores: {
