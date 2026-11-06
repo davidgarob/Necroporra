@@ -113,6 +113,9 @@ function estadisticasJugador(j) {
   }
 
   s.edadMedia = media(s.edades);
+  s.unicos = Object.keys(s.repeticiones).length;
+  s.unicosMuertos = Object.keys(s.repeticiones).filter(estaMuerto).length;
+  s.pctMuertos = s.unicos ? (s.unicosMuertos / s.unicos) * 100 : null;
   s.pctAciertos = s.selecciones ? (s.aciertos / s.selecciones) * 100 : null;
   s.pctTramos = Object.fromEntries(
     TRAMOS.map(t => [t, s.selecciones ? (s.tramos[t] / s.selecciones) * 100 : 0])
@@ -187,6 +190,12 @@ function puntosAcumulados() {
       }),
     };
   });
+}
+
+// ¿Está ya fallecido? Sí si figura en alguna lista "muertos" o tiene el campo "fallecio"
+// (aunque sea null) en FAMOSOS, para quien murió en un año en que nadie lo tenía.
+function estaMuerto(id) {
+  return "fallecio" in famoso(id) || AÑOS.some(a => PORRAS[a].muertos.includes(id));
 }
 
 // ---------- Comprobación de datos ----------

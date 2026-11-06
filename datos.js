@@ -8,6 +8,8 @@
 //     cerrado: true -> año terminado (cuenta para victorias, rachas, cucharas).
 //
 // Para añadir un fallecido: pon su id en "muertos" del año correspondiente.
+// Si murió en un año en que NADIE lo tenía en su porra, no va en "muertos":
+// márcalo en FAMOSOS con  fallecio: AÑO  (o  fallecio: null  si no sabes el año).
 // La edad se calcula sola: año de la porra - año de nacimiento.
 // =====================================================================
 
@@ -17,11 +19,11 @@ const FAMOSOS = {
   juan_carlos_i:          { nombre: "Juan Carlos I", nac: 1938 },
   isabel_ii:              { nombre: "Isabel II", nac: 1926 },
   pele:                   { nombre: "Pelé", nac: 1940 },
-  val_kilmer:             { nombre: "Val Kilmer", nac: 1959 },
+  val_kilmer:             { nombre: "Val Kilmer", nac: 1959, fallecio: 2025 },
   willie_nelson:          { nombre: "Willie Nelson", nac: 1933 },
   coppola:                { nombre: "Francis Ford Coppola", nac: 1939 },
   carmen_sevilla:         { nombre: "Carmen Sevilla", nac: 1930 },
-  berlusconi:             { nombre: "Silvio Berlusconi", nac: 1936 },
+  berlusconi:             { nombre: "Silvio Berlusconi", nac: 1936, fallecio: 2023 },
   marichalar:             { nombre: "Jaime de Marichalar", nac: 1963 },
   kane_tanaka:            { nombre: "Kane Tanaka", nac: 1903 },
   enrique_san_francisco:  { nombre: "Enrique San Francisco", nac: 1955 },
@@ -76,13 +78,13 @@ const FAMOSOS = {
   // ---- 2023 ----
   hitler:                 { nombre: "Hitler", nac: 1965 }, // con "fallecio" la edad se congela en esa fecha
   aguirre:                { nombre: "Esperanza Aguirre", nac: 1952 },
-  julian_munoz:           { nombre: "Julián Muñoz", nac: 1947,},
-  arevalo:                { nombre: "Arévalo", nac: 1947, },
+  julian_munoz:           { nombre: "Julián Muñoz", nac: 1947, fallecio: 2024 },
+  arevalo:                { nombre: "Arévalo", nac: 1947, fallecio: null }, // ya fallecido, año por rellenar
   depardieu:              { nombre: "Gérard Depardieu", nac: 1948 },
   biden:                  { nombre: "Joe Biden", nac: 1942 },
   concha_velasco:         { nombre: "Concha Velasco", nac: 1939 },
   zelenski:               { nombre: "Volodímir Zelenski", nac: 1978 },
-  papa_giorgio:           { nombre: "Papa Giorgio", nac: 1953, },
+  papa_giorgio:           { nombre: "Papa Giorgio", nac: 1953, fallecio: null }, // ya fallecido, año por rellenar
   jordi_pujol:            { nombre: "Jordi Pujol", nac: 1930 },
   zazza:                  { nombre: "Zazza el Italiano", nac: 1991, },
   maria_teresa_campos:    { nombre: "María Teresa Campos", nac: 1941 },
@@ -100,7 +102,7 @@ const FAMOSOS = {
   beckenbauer:            { nombre: "Franz Beckenbauer", nac: 1945 },
   julio_iglesias:         { nombre: "Julio Iglesias", nac: 1943 },
   tamames:                { nombre: "Ramón Tamames", nac: 1933 },
-  chuck_norris:           { nombre: "Chuck Norris", nac: 1940 },
+  chuck_norris:           { nombre: "Chuck Norris", nac: 1940, fallecio: 2026 },
   paco_sanz:              { nombre: "Paco Sanz", nac: 1970, },
   dandy_barcelona:        { nombre: "Dandy de Barcelona", nac: 1964, },
   michael_caine:          { nombre: "Michael Caine", nac: 1933 },
@@ -164,7 +166,6 @@ const PORRAS = {
     "Primer año sin la participación de los 4.",
     "Año con menos aciertos (2).",
     "Primera elección no humana (Chispas) (Diego)",
-    "Superviviente de mayor edad de la historia (Kane Tanaka, 118) (Diego)",
   ],
     muertos: ["enrique_san_francisco", "omar_alvarez"],
     jugadores: {
@@ -245,9 +246,7 @@ const PORRAS = {
     "Record de más personas únicas acertadas (6).",
     "Record de aciertos de David (3).",
     "Más tiempo entre victorias (David, 4 años).",
-    "Record de persona más repetida por una persona (Alberto, Clint Eastwood, 5 veces).",
-    "Edad media de necroporra más baja de la historia (Diego, 59,2).",
-    "Edad media de necroporra más alta de la historia (David, 89,2).",
+    "Record de persona más repetida (Eastwood, 5 veces).",
   ],
     muertos: ["sam_neill", "robert_duvall", "marie_rose_tessier", "antonio_tejero", "yayoi_kusama", "juan_tamariz"],
     jugadores: {

@@ -266,6 +266,8 @@
           ${fila("Aciertos totales", s => s.aciertos)}
           ${fila("Mejor racha de victorias", s => s.mejorRacha)}
           ${fila("% de aciertos (sobre selecciones)", s => pct(s.pctAciertos))}
+          ${fila("Personas únicas elegidas", s => s.unicos)}
+          ${fila("% de ellas ya fallecidas", s => `${pct(s.pctMuertos)} (${s.unicosMuertos})`)}
           ${fila("Prom. edad más bajo", s => `${num(s.mediaMasBaja.media)} (${s.mediaMasBaja.año})`)}
           ${fila("Prom. edad más alto", s => `${num(s.mediaMasAlta.media)} (${s.mediaMasAlta.año})`)}
           ${fila("Año con más aciertos", s => `${s.mejorAño.n} (${conAños(s.mejorAño)})`)}
