@@ -112,6 +112,12 @@
 }
 #curiosidades:empty { display: none; }
 #curiosidades li { margin: 0.4rem 0; }
+.estrellas { color: #c9a227; letter-spacing: 1px; font-size: 0.85em; }
+#tabla-estadisticas td:first-child { white-space: nowrap; }
+#grafica { margin-top: 2rem; overflow-x: auto; }
+@media (max-width: 768px) { #grafica svg { min-width: 560px; } }
+#grafica svg { width: 100%; height: auto; display: block; background: #fff; border-radius: 8px; }
+#grafica .nota { font-size: 0.85rem; color: #555; margin-top: 0.5rem; }
     
   </style>
 </head>
@@ -148,6 +154,7 @@
     <div id="seccion-global">
       <div class="titulo-seccion">🏅 Estadísticas globales</div>
       <div id="tabla-global"></div>
+      <div id="grafica"></div>
       <p id="los-cinco-grandes"></p>
       <p id="mas-elegidos"></p>
       <p id="nota-global"></p>
@@ -164,6 +171,12 @@
     const pct = n => num(n, 1) + "%";
     const nombre = id => famoso(id).nombre;
     const plural = (n, s, p) => `${n} ${n === 1 ? s : p}`;
+
+    // Estrellas = victorias en años cerrados hasta ese año (sin año: todas)
+    const estrellas = (j, año) => {
+      const n = victoriasHasta(j, año);
+      return n ? ` <span class="estrellas" title="${plural(n, "victoria", "victorias")}">${"★".repeat(n)}</span>` : "";
+    };
 
     // ---------- Pestañas ----------
     function pintarTabs(activa) {
@@ -197,12 +210,12 @@
 
       document.getElementById("tabla-ranking").innerHTML = `
         <ol>
-          ${ranking.map(r => `<li><strong>${r.nombre}</strong>: ${plural(r.puntos, "punto", "puntos")}</li>`).join("")}
+          ${ranking.map(r => `<li><strong>${r.nombre}</strong>${estrellas(r.nombre, año)}: ${plural(r.puntos, "punto", "puntos")}</li>`).join("")}
         </ol>`;
 
       const ganadores = ganadoresDe(año);
       document.getElementById("nombre-ganador").innerHTML =
-        ganadores.length ? ganadores.map(g => `🏆 ${g}`).join("<br>") : "—";
+        ganadores.length ? ganadores.map(g => `🏆 ${g}${estrellas(g, año)}`).join("<br>") : "—";
       document.getElementById("estado-año").textContent =
         porra.cerrado ? "" : (ganadores.length ? "Provisional: el año sigue en juego" : "El año sigue en juego");
 
@@ -211,7 +224,7 @@
         const ids = seleccionesDe(año, j);
         const hits = aciertosDe(año, j);
         return `<tr>
-          <td>${j}</td>
+          <td>${j}${estrellas(j, año)}</td>
           <td>${num(media(ids.map(id => edadEn(id, año))))}</td>
           <td>${hits.length}</td>
           <td>${num(media(hits.map(id => edadEn(id, año))))}</td>
@@ -221,7 +234,7 @@
 
       document.getElementById("detalle").innerHTML = jugadoresDe(año).map(j => `
         <div class="jugador">
-          <h3>${j}</h3>
+          <h3>${j}${estrellas(j, año)}</h3>
           <ul>
             ${seleccionesDe(año, j).map(id => `
               <li class="${porra.muertos.includes(id) ? "muerto" : ""}">
@@ -247,7 +260,7 @@
 
       document.getElementById("tabla-global").innerHTML = `
         <table>
-          <tr><th></th>${st.map(s => `<th>${s.jugador}</th>`).join("")}</tr>
+          <tr><th></th>${st.map(s => `<th>${s.jugador}${estrellas(s.jugador)}</th>`).join("")}</tr>
           ${fila("Promedio edad", s => num(s.edadMedia))}
           ${fila("Victorias", s => s.victorias)}
           ${fila("Aciertos totales", s => s.aciertos)}
@@ -263,6 +276,8 @@
           ${TRAMOS.map(t => fila(`% ${t} años`, s => pct(s.pctTramos[t]))).join("")}
         </table>`;
 
+      renderGrafica();
+
       document.getElementById("los-cinco-grandes").textContent =
         `👑 Los grandes (elegidos por todos en algún momento): ${lista(losGrandes()).replaceAll(", ", " · ")}`;
 
@@ -276,6 +291,60 @@
         (abiertos.length
           ? `Victorias, rachas y cucharas solo cuentan años cerrados (${abiertos.join(", ")} sigue en juego); aciertos y porcentajes sí incluyen ese año.`
           : "");
+    }
+
+    // ---------- Gráfica de puntos acumulados ----------
+    function renderGrafica() {
+      const datos = puntosAcumulados();
+      const colores = ["#2563eb", "#d97706", "#0d9488", "#9333ea", "#be123c"];
+      const W = 640, H = 320, m = { t: 20, r: 95, b: 40, l: 36 };
+      const iw = W - m.l - m.r, ih = H - m.t - m.b;
+      const maxY = Math.max(...datos.flatMap(d => d.puntos.map(p => p.total)));
+      const top = Math.max(2, Math.ceil(maxY / 2) * 2);
+      const x = i => m.l + (AÑOS.length === 1 ? iw / 2 : (i * iw) / (AÑOS.length - 1));
+      const y = v => m.t + ih - (v / top) * ih;
+
+      let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Puntos acumulados por jugador y año">`;
+
+      // Rejilla y eje Y
+      for (let v = 0; v <= top; v += 2) {
+        svg += `<line x1="${m.l}" x2="${W - m.r}" y1="${y(v)}" y2="${y(v)}" stroke="#e5e5e5"/>`;
+        svg += `<text x="${m.l - 8}" y="${y(v) + 4}" text-anchor="end" font-size="11" fill="#666">${v}</text>`;
+      }
+      // Eje X
+      AÑOS.forEach((a, i) => {
+        svg += `<text x="${x(i)}" y="${H - 16}" text-anchor="middle" font-size="11" fill="#666">${a}</text>`;
+      });
+
+      // Líneas (discontinuas en el tramo del año en curso) y puntos
+      datos.forEach((d, k) => {
+        const c = colores[k % colores.length];
+        for (let i = 1; i < d.puntos.length; i++) {
+          const dash = PORRAS[AÑOS[i]].cerrado ? "" : ` stroke-dasharray="5 4"`;
+          svg += `<line x1="${x(i - 1)}" y1="${y(d.puntos[i - 1].total)}" x2="${x(i)}" y2="${y(d.puntos[i].total)}" stroke="${c}" stroke-width="2.5"${dash}/>`;
+        }
+        d.puntos.forEach((p, i) => {
+          svg += `<circle cx="${x(i)}" cy="${y(p.total)}" r="4" fill="${c}"><title>${d.jugador}, ${p.año}: ${p.total} acumulados</title></circle>`;
+        });
+      });
+
+      // Etiquetas al final de cada línea, separadas si se pisan
+      const ultimo = AÑOS.length - 1;
+      const etiquetas = datos
+        .map((d, k) => ({ d, k, y: y(d.puntos[ultimo].total) }))
+        .sort((a, b) => a.y - b.y);
+      for (let i = 1; i < etiquetas.length; i++) {
+        if (etiquetas[i].y - etiquetas[i - 1].y < 14) etiquetas[i].y = etiquetas[i - 1].y + 14;
+      }
+      etiquetas.forEach(e => {
+        svg += `<text x="${x(ultimo) + 10}" y="${e.y + 4}" font-size="12" font-weight="bold" fill="${colores[e.k % colores.length]}">${e.d.jugador} ${e.d.puntos[ultimo].total}</text>`;
+      });
+      svg += `</svg>`;
+
+      const abiertos = AÑOS.filter(a => !PORRAS[a].cerrado);
+      document.getElementById("grafica").innerHTML =
+        `<div class="titulo-seccion">Puntos acumulados</div>${svg}` +
+        (abiertos.length ? `<div class="nota">Línea discontinua: año en curso (${abiertos.join(", ")}).</div>` : "");
     }
 
     // ---------- Arranque ----------

@@ -167,6 +167,28 @@ function losGrandes() {
   return [...porJugador[0]].filter(id => porJugador.every(s => s.has(id)));
 }
 
+// ---------- Estrellas y gráfica ----------
+
+// Victorias de un jugador en años CERRADOS, hasta el año indicado (incluido).
+// Sin año, cuenta todas. Las estrellas salen de aquí: el nombre en datos.js no se toca.
+function victoriasHasta(j, año = Infinity) {
+  return AÑOS.filter(a => a <= año && PORRAS[a].cerrado && ganadoresDe(a).includes(j)).length;
+}
+
+// Puntos (aciertos) acumulados por jugador al final de cada año.
+function puntosAcumulados() {
+  return JUGADORES.map(j => {
+    let total = 0;
+    return {
+      jugador: j,
+      puntos: AÑOS.map(a => {
+        if (PORRAS[a].jugadores[j]) total += aciertosDe(a, j).length;
+        return { año: a, total };
+      }),
+    };
+  });
+}
+
 // ---------- Comprobación de datos ----------
 // Devuelve una lista de avisos (vacía si todo está bien).
 function validarDatos() {
