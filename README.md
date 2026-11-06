@@ -23,7 +23,7 @@ Los tres tienen que estar en la misma carpeta.
 ## Reglas
 
 - Si hay empate en el primer puesto, ganan todos los empatados. Con 0 puntos no gana nadie.
-- Cuchara de madera: último puesto en solitario (si hay empate en la cola, nadie la recibe).
+- Cuchara de madera: La recibe la persona que no ha conseguido puntos.
 - La edad de cada famoso se calcula como año de la porra menos año de nacimiento.
 - Las estrellas (★) junto al nombre son las victorias en años cerrados y se calculan solas. No hay que escribirlas en `datos.js`: el nombre del jugador tiene que ser siempre el mismo ("DIEGO") en todos los años.
 
